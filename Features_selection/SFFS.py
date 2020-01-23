@@ -54,15 +54,21 @@ class SequentialFloatingForwardSelection(object):
                     before_leave = self.tem_features_set
                     after_leave, this_auc = self.sbs(old_list=self.tem_features_set)
 
+                    # Is the result become better before removal?
                     if this_auc > best_auc:
                         best_auc = this_auc
                         self.tem_features_set = after_leave
                         self.k -= 1
+
+                        # find the new feature
                         rm_num = set(after_leave).symmetric_difference(set(before_leave))
+
+                        # store the removed feature
                         print("remove: ", rm_num)
                         self.set_verbose.append(after_leave)
                         self.auc_verbose.append(this_auc)
                         self.action_verbose.append("remove"+str(rm_num).strip('{').strip('}'))
+
                         print("!!!!!!!!!!!!!!!!!current k: ", self.k, " !!!!!!!!!!!!!!!!!!!!!")
                     else:
                         self.tem_features_set = before_leave
@@ -70,8 +76,7 @@ class SequentialFloatingForwardSelection(object):
 
     def sfs(self, old_list):
         """ Sequential Feature Selection"""
-        result = []
-        record_list = []
+        result, record_list = [], []
         total_list = range(len(delta_F))
         test_list = [ele for ele in total_list if ele not in old_list]
         # print("SFS: ", old_list)
