@@ -22,14 +22,23 @@ best_auc = sffs.run()
 sffs.plot()
 ```
 
-delta_X: 88 cells * 12 features after features scaling and gamma correction
-y: ground truth label
-tag: cells name
+delta_X: 88 cells * 12 features after features scaling and gamma correction  
+y: ground truth label  
+tag: cells name  
 
 ![](/demo_images/sffs.png)
 
 ```
-
-
+the process of sffs:
+10 -->
+10, 11 -->
+10, 11, 6 -->
+10, 11, 6, 0 -->
+10, 11, 6, 0, 2 -->
+10, 11, 6, 0, 2, 8 -->
+10, 11, 6, 2, 8 -->
+10, 11, 6, 2, 8, 4 -->
+...
+...
 ```
 
