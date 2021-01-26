@@ -30,7 +30,7 @@ class SequentialFloatingForwardSelection(object):
 
     def run(self):
         self.k = 0
-        print("!!!!!!!!!!!!!!!!!current k: ", self.k, " !!!!!!!!!!!!!!!!!!!!!")
+        print("current k: ", self.k)
         best_auc = 0
         status_outer = True
         while status_outer:
@@ -40,7 +40,7 @@ class SequentialFloatingForwardSelection(object):
             if this_auc > best_auc:
                 best_auc = this_auc
             self.k += 1
-            print("!!!!!!!!!!!!!!!!!current k: ", self.k, " !!!!!!!!!!!!!!!!!!!!!")
+            print("current k: ", self.k)
 
             status_inner = True
             while status_inner:
@@ -69,7 +69,7 @@ class SequentialFloatingForwardSelection(object):
                         self.auc_verbose.append(this_auc)
                         self.action_verbose.append("remove"+str(rm_num).strip('{').strip('}'))
 
-                        print("!!!!!!!!!!!!!!!!!current k: ", self.k, " !!!!!!!!!!!!!!!!!!!!!")
+                        print("current k: ", self.k)
                     else:
                         self.tem_features_set = before_leave
                         status_inner = False
