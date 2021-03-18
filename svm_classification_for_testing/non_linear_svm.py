@@ -4,8 +4,8 @@ from collections import Counter, OrderedDict
 from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
-from svm_classification.non_linear_svm_mode import SvmClassificationMode
-from svm_classification.classification import Classification, BinaryClassificationMetrics
+from svm_classification_for_testing.non_linear_svm_mode import SvmClassificationMode
+from svm_classification_for_testing.classification import Classification, BinaryClassificationMetrics
 
 
 class NonLinearSVM(Classification):
@@ -97,7 +97,7 @@ class NonLinearSVM(Classification):
                 elif self.classification_mode == SvmClassificationMode.TRAIN_WITH_DEFAULT:
                     self.__split_dataset()
                 else:
-                    raise Exception("Invalid svm_classification mode")
+                    raise Exception("Invalid svm_classification_for_testing mode")
                 self.model = self.__train(self.__x_train, self.__y_train, self.gamma, self.C, probability=True)
                 y_test_predicted, area_under_curve = self.__predict(self.__x_test, self.__y_test)
 

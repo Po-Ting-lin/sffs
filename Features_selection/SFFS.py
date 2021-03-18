@@ -112,7 +112,7 @@ class SequentialFloatingForwardSelection(object):
         plt.ylabel('AUC')
         plt.xlabel("Features")
         props = dict(boxstyle='round', facecolor='none', alpha=0.5)
-        plt.text(10, 0.92, s="best AUC: " + str(np.max(self.auc_verbose)), bbox=props)
+        plt.text(10, 0.92, s="best AUC: " + str(np.round(np.max(self.auc_verbose), 3)), bbox=props)
         plt.show()
 
 

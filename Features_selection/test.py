@@ -1,10 +1,12 @@
 import numpy as np
-from svm_classification.non_linear_svm import NonLinearSVM
-from svm_classification.non_linear_svm_mode import GammaMode, SvmClassificationMode
+from svm_classification_for_testing.non_linear_svm import NonLinearSVM
+from svm_classification_for_testing.non_linear_svm_mode import GammaMode, SvmClassificationMode
 from Features_selection import SequentialFloatingForwardSelection
 
-
-# customized predict function
+##############################################################################################
+# replace with your predict function
+# input: features index list
+# output: metric of the prediction
 def predict_callback(features_list):
     x = np.load("x.npy")
     y = np.load("y.npy")
@@ -20,15 +22,20 @@ def predict_callback(features_list):
     cls.set_features_list(features_list)
     cls.set_data_container(x, y, tag)
     return cls.main_classify_process()
-
+##############################################################################################
 
 total_number_of_features = 12
-target_number = 12
-sffs = SequentialFloatingForwardSelection(total_number_of_features, target_number, predict_callback)
+target_feature_number = 12
+sffs = SequentialFloatingForwardSelection(total_number_of_features, target_feature_number, predict_callback)
 sffs.process()
 sffs.plot()
 
-######################################################################################################################
+
+
+
+
+
+
 
 
 

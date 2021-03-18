@@ -1,30 +1,20 @@
-# FeaturesSelection_sffs
+## Introduction
 
 According to the paper [Sequential Floating Forward Selection(SFFS)](https://www.sciencedirect.com/science/article/abs/pii/0167865594901279)
-<br /> 
-* Implement SFFS on SVC tasks.  
 
-![](/demo_images/FSall.png)
-
-
-## run test data
+## Test result
 ```python
 from Features_selection import SequentialFloatingForwardSelection
-from data_preparation import Preprocess
-from configuration import DATE
 
-# data preparation: using 88 cells
-delta_X, y, tag = Preprocess(date_list=DATE, gamma_mode=True).delta_X_generator()
-
-# SFFS
-sffs = SequentialFloatingForwardSelection(delta_X, y, tag, require_d=12)
-best_auc = sffs.run()
+total_number_of_features = 12
+target_feature_number = 12
+sffs = SequentialFloatingForwardSelection(total_number_of_features, target_feature_number, predict_callback)
+sffs.process()
 sffs.plot()
 ```
 
-delta_X: 88 cells * 12 features after features scaling and gamma correction  
-y: ground truth label  
-tag: cells name  
+X: 88 cells * 12 features  
+y: ground truth label
 
 ![](/demo_images/sffs.png)
 
