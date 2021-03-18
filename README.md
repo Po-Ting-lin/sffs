@@ -32,3 +32,11 @@ the process of sffs:
 ...
 ```
 The best performance is using the features \[10, 11, 6, 2, 8, 4].
+
+## Reference
+```
+[1] Pudil, Pavel, Jana Novovičová, and Josef Kittler. 
+    "Floating search methods in feature selection." 
+    Pattern recognition letters 15.11 (1994): 1119-1125.
+```
+
