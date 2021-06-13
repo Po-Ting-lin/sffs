@@ -3,6 +3,21 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 
+class FeatureSet(object):
+    def __init__(self, f_set, auc):
+        self.f_set = f_set
+        self.auc = auc
+
+    def __lt__(self, other):
+        return self.auc < other.auc
+
+    def __gt__(self, other):
+        return self.auc > other.auc
+
+    def __str__(self):
+        return "feature set: {}, auc: {}".format(self.f_set, self.auc)
+
+
 class SequentialFloatingForwardSelection(object):
     def __init__(self, total_num_of_features, k, predict_callback=None):
         # parameters
@@ -15,41 +30,44 @@ class SequentialFloatingForwardSelection(object):
         self.predict_callback = predict_callback
 
         # result
-        self.set_verbose = []
-        self.auc_verbose = []
+        self.best_feature_set = None
+        self.f_set_list = []
         self.action_verbose = []
 
     def process(self):
         assert self.predict_callback is not None, "you need to input predict function"
         print("Starting Sequential Floating Forward Selection... ")
         self.num_of_features = 0
-        best_auc = 0
+        self.best_feature_set = FeatureSet([], 0)
         status_outer = True
         while status_outer:
             self.num_of_features += 1
             print("\nNumber of features: {}".format(self.num_of_features))
-            self.tmp_features_set, sfs_auc = self.__sfs(old_list=self.tmp_features_set)
-            best_auc = sfs_auc if sfs_auc > best_auc else best_auc
+            sfs_set = self.__sfs(old_list=self.tmp_features_set)
+            self.best_feature_set = sfs_set if sfs_set > self.best_feature_set else self.best_feature_set
 
             if self.num_of_features == self.k:
-                return best_auc
+                print("The best", self.best_feature_set)
+                return self.best_feature_set
             status_inner = True
             while status_inner and len(self.tmp_features_set) > 1:
-                sbs_auc, status_inner = self.__sbs(old_list=self.tmp_features_set, prev_auc=best_auc)
-                best_auc = sbs_auc if status_inner else best_auc
-                print("current best auc: ", np.round(best_auc, 3), "; remove best auc: ", np.round(sbs_auc, 3))
+                sbs_set, status_inner = self.__sbs(old_list=self.tmp_features_set, prev_auc=self.best_feature_set.auc)
+                self.best_feature_set = sbs_set if status_inner else self.best_feature_set
+                print("current best auc: ", np.round(self.best_feature_set.auc, 3), "; remove best auc: ", np.round(sbs_set.auc, 3))
 
     def plot(self):
-        string_set_verbose = [''.join(str(x).strip("[").strip("]")) for x in self.set_verbose]
-        x = np.arange(len(self.auc_verbose))
+        f_set_list = [e.f_set for e in self.f_set_list]
+        auc_list = [e.auc for e in self.f_set_list]
+        string_set_verbose = [''.join(str(x).strip("[").strip("]")) for x in f_set_list]
+        x = np.arange(len(auc_list))
         plt.figure(figsize=(10, 10))
-        plt.plot(x, self.auc_verbose)
+        plt.plot(x, auc_list)
         plt.xticks(x, string_set_verbose, rotation=90)
         plt.title("Sequential Floating Forward Selection")
         plt.ylabel('AUC')
         plt.xlabel("Features")
         props = dict(boxstyle='round', facecolor='none', alpha=0.5)
-        plt.text(10, 0.92, s="best AUC: " + str(np.round(np.max(self.auc_verbose), 3)), bbox=props)
+        plt.text(10, 0.92, s="best AUC: " + str(np.round(self.best_feature_set.auc, 3)), bbox=props)
         plt.show()
 
     def __test_combination(self, test_feature_list):
@@ -72,10 +90,11 @@ class SequentialFloatingForwardSelection(object):
 
         added_feature, sfs_feature_list, sfs_best_auc = self.__choose_best_auc(old_list, record_list, result)
         print(" sfs finish -- add: {}".format(added_feature) + " " * 40)
-        self.set_verbose.append(sfs_feature_list)
-        self.auc_verbose.append(sfs_best_auc)
+        sfs_set = FeatureSet(sfs_feature_list, sfs_best_auc)
+        self.tmp_features_set = sfs_feature_list
+        self.f_set_list.append(sfs_set)
         self.action_verbose.append("add"+str(added_feature).strip('{').strip('}'))
-        return sfs_feature_list, sfs_best_auc
+        return sfs_set
 
     def __sbs(self, old_list, prev_auc):
         """Sequential Backward Selection"""
@@ -91,17 +110,17 @@ class SequentialFloatingForwardSelection(object):
             self.__progress_bar(text, idx, len(old_list), cur_list)
 
         removed_feature, sbs_feature_list, sbs_best_auc = self.__choose_best_auc(old_list, record_list, result)
+        sbs_set = FeatureSet(sbs_feature_list, sbs_best_auc)
         if sbs_best_auc > prev_auc:
             is_removed = True
             self.tmp_features_set = sbs_feature_list
             self.num_of_features -= 1
-            self.set_verbose.append(sbs_feature_list)
-            self.auc_verbose.append(sbs_best_auc)
+            self.f_set_list.append(FeatureSet(sbs_feature_list, sbs_best_auc))
             self.action_verbose.append("remove" + str(removed_feature).strip('{').strip('}'))
             print(" sbs finish -- remove: {}".format(removed_feature) + " " * 40)
         else:
             print("sbs finish" + " " * 40)
-        return sbs_best_auc, is_removed
+        return sbs_set, is_removed
 
     def __choose_best_auc(self, old_features, new_features_list, auc_list):
         best_auc = np.max(auc_list)

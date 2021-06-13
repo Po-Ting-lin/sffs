@@ -13,25 +13,42 @@ sffs.process()
 sffs.plot()
 ```
 
-X: 88 cells * 12 features  
-y: ground truth label
+```shell
+Starting Sequential Floating Forward Selection...
 
+Number of features: 1
+        SFS:|############| --  sfs finish -- add: {10}
+
+Number of features: 2
+        SFS:|###########|  --  sfs finish -- add: {7}
+        SBS:|##|           -- sbs finish
+current best auc:  0.97 ; remove best auc:  0.923
+
+Number of features: 3
+        SFS:|##########|   --  sfs finish -- add: {3}
+        SBS:|###|          -- sbs finish
+current best auc:  0.973 ; remove best auc:  0.97
+
+Number of features: 4
+        SFS:|#########|    --  sfs finish -- add: {2}
+        SBS:|####|         -- sbs finish
+current best auc:  0.977 ; remove best auc:  0.973
+
+Number of features: 5
+        SFS:|########|     --  sfs finish -- add: {1}
+        SBS:|#####|        -- sbs finish
+current best auc:  0.979 ; remove best auc:  0.973
+
+Number of features: 6
+        SFS:|#######|      --  sfs finish -- add: {9}
+        SBS:|#*****|       -- testing: { 2, 3, 7, 9, 10,  }
+~
+
+The best feature set: [1, 2, 3, 7, 10], auc: 0.979
+```
+
+## Plot
 ![](/demo_images/sffs.png)
-
-```
-the process of sffs:
-10 -->
-10, 11 -->
-10, 11, 6 -->
-10, 11, 6, 0 -->
-10, 11, 6, 0, 2 -->
-10, 11, 6, 0, 2, 8 -->
-10, 11, 6, 2, 8 -->
-10, 11, 6, 2, 8, 4 -->
-...
-...
-```
-The best performance is using the features \[10, 11, 6, 2, 8, 4].
 
 ## Reference
 ```
