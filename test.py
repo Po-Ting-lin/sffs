@@ -8,9 +8,9 @@ from Features_selection import SequentialFloatingForwardSelection
 # input: features index list
 # output: metric of the prediction
 def predict_callback(features_list):
-    x = np.load("x.npy")
-    y = np.load("y.npy")
-    tag = np.load("tag.npy")
+    x = np.load("Features_selection/x.npy")
+    y = np.load("Features_selection/y.npy")
+    tag = np.load("Features_selection/tag.npy")
     cls = NonLinearSVM(iterations=300,
                        features_list=None,
                        model=None,
